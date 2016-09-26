@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mycom.mepper.BoardMapper">
+	<!-- 게시물 등록 -->
+	<insert id="writeBoard">
+		<selectKey keyProperty="bno" resultType="int" order="BEFORE">
+			 select web_board_bno_seq.nextval FROM DUAL
+		</selectKey>
+		insert into WEB_BOARD_TBL(bno, userid, writer, title, content)
+		values(#{bno}, 'testID', #{writer}, #{title}, #{content})
+	</insert>
+	<insert id="addFiles">
+		insert into WEB_BOARD_FILES_TBL(bno, file_url)
+		values(#{bno}, #{fileName})
+	</insert>
+	
+	
+	<!-- 한테이블안에 여러 게시판의 글들이 한꺼번에 들어있으므로 bno로만 검색해도 된다. -->
+	<select id="readBoard" resultType="BoardVO">
+		SELECT BNO,TITLE, USERID, WRITER,CONTENT FROM WEB_BOARD_TBL WHERE BNO=#{bno}  
+	</select>
+	<select id="getFiles" resultType="String">
+		SELECT FILE_URL FROM WEB_BOARD_FILES_TBL WHERE BNO=#{bno}
+	</select>
+	
+</mapper>
+
+
